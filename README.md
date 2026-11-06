@@ -10,7 +10,7 @@ updated" date.
 ## Screenshots
 
 Not hand-made. `tools/process-shots.py` resizes and re-encodes the frames the app repo's
-`AppStoreScreenshots` UI test captures on the simulator (`docs/app-store/screenshots/` there).
+`AppStoreScreenshots` UI test captures on the simulator (`docs/app-store/screenshots/6.9-inch/` there).
 Nothing is retouched: if something in one of these looks wrong, it is wrong in the app.
 
     ./tools/process-shots.py      # 330px and 660px WebP into shots/ (needs Pillow)

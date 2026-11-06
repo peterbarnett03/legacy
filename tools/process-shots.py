@@ -18,7 +18,7 @@ import sys
 from PIL import Image
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DEFAULT_SOURCE = ROOT.parent / "LegacySwift" / "docs" / "app-store" / "screenshots"
+DEFAULT_SOURCE = ROOT.parent / "LegacySwift" / "docs" / "app-store" / "screenshots" / "6.9-inch"
 OUT = ROOT / "shots"
 
 WANTED = {
