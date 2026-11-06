@@ -32,12 +32,30 @@
         <p class="eyebrow">FOR IPHONE</p>
         <h1>One question a day. A book at the end.</h1>
         <p class="lede">Legacy asks you a single question each morning about your life. You answer out loud, in your own words, for as long as you like. It writes down what you said and keeps building a book, chapter by chapter, that your family can read.</p>
-        <p class="status"><span class="dot"></span>Made for one family. Available on the App Store by invitation.</p>
+        <p class="status"><span class="dot"></span>Coming soon to the App Store</p>
       </div>
-      <picture>
-        <source srcset="shots/today.webp 1x, shots/today@2x.webp 2x" type="image/webp">
-        <img class="shot" src="shots/today.webp" width="330" height="717" alt="The Today screen: a single question, 'Walk me through the day you left Maple Street for good', above a Share your story button.">
-      </picture>
+      <!-- The phone is drawn in CSS, not photographed. The four stacked edges give the body a
+           side wall once it turns; without them the tilt shows a hollow. -->
+      <div class="phone near-left">
+        <div class="phone-body">
+          <span class="phone-edge" style="--z:.25"></span>
+          <span class="phone-edge" style="--z:.5"></span>
+          <span class="phone-edge" style="--z:.75"></span>
+          <span class="phone-edge" style="--z:1"></span>
+          <span class="phone-keys"></span>
+          <span class="phone-power"></span>
+          <div class="phone-glass">
+            <div class="phone-screen">
+              <img src="shots/today.webp"
+                   srcset="shots/today.webp 1x, shots/today@2x.webp 2x"
+                   width="330" height="717" fetchpriority="high"
+                   alt="The Today screen: a single question, 'Walk me through the day you left Maple Street for good', above a Share your story button.">
+              <span class="phone-island"></span>
+              <span class="phone-glare"></span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 

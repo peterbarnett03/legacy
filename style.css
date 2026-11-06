@@ -67,7 +67,7 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
 /* Landing */
 .hero { padding-block: 72px 16px; }
 .hero-grid { display: grid; gap: 48px; align-items: center; }
-@media (min-width: 860px) { .hero-grid { grid-template-columns: 1.1fr .9fr; gap: 64px; } }
+@media (min-width: 860px) { .hero-grid { grid-template-columns: 1fr 340px; gap: 72px; } }
 .hero-grid > * { min-width: 0; }
 .eyebrow { color: var(--accent); font-size: .8rem; font-weight: 700; letter-spacing: .14em; margin: 0 0 14px; }
 .hero h1 { font-size: clamp(2.2rem, 5.2vw, 3.6rem); line-height: 1.08; margin: 0 0 18px; font-weight: 700; text-wrap: balance; }
@@ -76,7 +76,170 @@ a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-
 .status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
 
 .shot { display: block; width: 100%; height: auto; border-radius: 28px; box-shadow: 0 24px 60px -24px var(--shot-shadow); border: 1px solid var(--line); }
-.hero .shot { max-width: 330px; margin-inline: auto; }
+
+/* ---- The iPhone ------------------------------------------------------ */
+
+/* Drawn rather than photographed, the same construction as the Shred and Aura sites. A tilted
+ * render is a 300 KB image that fits one page width and one theme; this reflows, stays sharp at
+ * any density, and the screenshot inside is the app's own pixels at 2x, untouched.
+ *
+ * Every proportion is the iPhone Pro Max's, the device the captures came from. Across its width:
+ * a thin titanium rail, then black glass, then the display. The corner is anchored on the
+ * display, whose radius is near enough a seventh of its width; the layers outside add their own
+ * thickness to it. Getting that black border and that radius right is most of what makes this
+ * read as a phone rather than as a rounded rectangle.
+ *
+ * Default is straight on. Tilt is opt in through .near-left, named for the edge that ends up
+ * closest to the viewer. */
+.phone {
+  --ry: 0deg;                   /* turn */
+  --rx: 0deg;                   /* tip back */
+  --rz: 0deg;                   /* the hand is never quite level */
+  --depth: 0px;
+  --edge: none;                 /* the side wall only exists once it turns */
+  position: relative;
+  width: 100%;
+  max-width: 340px;
+  /* Long, like a product shot on a 100mm lens. A short perspective splays the near edge and reads
+     as a video game asset. */
+  perspective: 2400px;
+  perspective-origin: 50% 42%;
+}
+.phone.near-left { --ry: -15deg; --rx: 4deg; --rz: 1.2deg; --depth: 15px; --edge: block; }
+
+.phone-body {
+  position: relative;
+  padding: 1.29%;
+  border-radius: 16.2% / 7.77%;
+  transform-style: preserve-3d;
+  transform: rotateY(var(--ry)) rotateX(var(--rx)) rotateZ(var(--rz));
+  background:
+    /* The two antenna splits, on the rail and covered by the glass across the middle, which is
+       where they are on the real thing. */
+    linear-gradient(180deg, transparent 12.2%, rgba(255, 255, 255, 0.5) 12.2% 12.42%, transparent 12.42%),
+    linear-gradient(180deg, transparent 87.4%, rgba(255, 255, 255, 0.5) 87.4% 87.62%, transparent 87.62%),
+    /* Brushed titanium. Enough stops for two specular bands and a dark side; a three-stop gradient
+       looks like plastic. */
+    linear-gradient(147deg,
+      #F4F1EC 0%, #BCB8B0 7%, #8B877F 16%, #E2DED7 26%, #A5A19A 36%,
+      #6E6A64 48%, #CFCBC4 60%, #969289 71%, #E8E4DD 83%, #A9A59D 93%, #7A766E 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.55),      /* the chamfer catching light */
+    inset 0 0 0 2.5px rgba(0, 0, 0, 0.10),          /* and turning away again */
+    0 1px 2px rgba(0, 0, 0, 0.24),
+    0 34px 56px -30px var(--shot-shadow),
+    0 80px 90px -56px var(--shot-shadow);
+}
+
+/* An iPhone corner is a superellipse, not a circular arc, and the difference shows up as the black
+   border looking fatter at 45 degrees than along the edges. Browsers that can draw one get the
+   real shape; the rest keep the arc. */
+@supports (corner-shape: squircle) {
+  .phone-body,
+  .phone-edge,
+  .phone-glass,
+  .phone-screen { corner-shape: squircle; }
+}
+
+/* Plates stacked behind the front face give the body a side wall when it turns. One plate alone
+   leaves a hollow you can see through. They switch off on a phone facing you, which has no visible
+   side: left on, they land in the front face's plane and, being later in the DOM, paint over the
+   rail. */
+.phone-edge {
+  display: var(--edge);
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  transform: translateZ(calc(var(--depth) * var(--z) * -1));
+  background: linear-gradient(90deg, #A29E95, #625F57 38%, #55524B 62%, #918D84);
+}
+
+/* The black border between the rail and the display. Leaving this out is the single thing that
+   makes a CSS phone look like a screenshot with rounded corners. */
+.phone-glass {
+  position: relative;
+  padding: 1.98%;
+  border-radius: 15.5% / 7.3%;
+  background: #06070B;
+  box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.16),
+              inset 0 1px 1px rgba(255, 255, 255, 0.10);
+}
+
+.phone-screen {
+  position: relative;
+  overflow: hidden;
+  border-radius: 14.1% / 6.5%;
+  background: #000;
+}
+.phone-screen img { display: block; width: 100%; height: auto; }
+
+.phone-island {
+  position: absolute;
+  top: 1.15%;
+  left: 50%;
+  width: 28.4%;
+  aspect-ratio: 125 / 36;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  background: #000;
+}
+
+/* One soft band across the glass at the angle the body is turned. Kept low: a convincing
+   reflection is one you have to look for. */
+.phone-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(104deg,
+    rgba(255, 255, 255, 0.26) 0%,
+    rgba(255, 255, 255, 0.08) 14%,
+    rgba(255, 255, 255, 0) 29%,
+    rgba(255, 255, 255, 0) 64%,
+    rgba(255, 255, 255, 0.10) 77%,
+    rgba(255, 255, 255, 0) 91%);
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.22);
+}
+
+/* Both key clusters are one element each, carved into buttons by hard gradient stops. */
+.phone-keys,
+.phone-power {
+  position: absolute;
+  width: 1.5%;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.28);
+}
+.phone-keys {
+  left: -0.72%;
+  top: 19.6%;
+  height: 18.6%;
+  background: linear-gradient(180deg,
+    #A6A29A 0 18.3%, transparent 18.3% 32.3%,
+    #A6A29A 32.3% 62.4%, transparent 62.4% 69.9%,
+    #A6A29A 69.9% 100%);
+}
+.phone-power {
+  right: -0.72%;
+  top: 25.5%;
+  height: 19.1%;
+  background: linear-gradient(180deg,
+    #A6A29A 0 43.5%, transparent 43.5% 81.2%,
+    #C2BEB6 81.2% 100%);
+}
+
+/* The tilt is a flourish, and a flourish that costs legibility on a 390px screen is not worth
+   keeping, so toward the narrow end the phone straightens up. */
+@media (max-width: 859px) {
+  .phone { margin: 0 auto; }
+  .phone.near-left { --ry: -8deg; --rx: 3deg; --rz: 0.7deg; --depth: 10px; }
+}
+@media (max-width: 560px) {
+  .phone { max-width: 292px; }
+  .phone.near-left { --ry: -5deg; --rx: 2deg; --rz: 0.4deg; --depth: 7px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .phone-body { transition: transform .6s ease; }
+}
 
 .steps { padding-block: 56px 8px; }
 .steps ol { list-style: none; counter-reset: step; padding: 0; margin: 0; display: grid; gap: 22px; }
